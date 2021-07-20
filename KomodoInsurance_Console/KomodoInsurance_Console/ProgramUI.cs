@@ -18,7 +18,6 @@ namespace KomodoInsurance_Console
         }
 
         // Display Welcome Message and Options
-
         private void Menu()
         {
             bool keepRunning = true;
@@ -54,12 +53,12 @@ namespace KomodoInsurance_Console
                             Console.ReadLine();
                             break;
                         case "5":
-                        //view licenses
+                            // view licenses
                             DisplayDevsWithoutLicense();
                             Console.ReadLine();
                             break;
                         case "6": 
-                            // exit program
+                            // Exit program
                             Console.WriteLine("Thank you! Have a great day!");
                             Console.ReadLine();
                             keepRunning = false;
@@ -93,7 +92,7 @@ namespace KomodoInsurance_Console
                     break;
                 case "2":
                     // Add team member by team ID and Developer ID
-                    AddTeamMember();
+                    AddMultipleDevelopersToTeam();
                     Console.ReadLine();
                     break;
                 case "3":
@@ -134,16 +133,8 @@ namespace KomodoInsurance_Console
             newDev.LastName = Console.ReadLine();
 
             Console.WriteLine("Enter Employee ID:");
-            int id;
-            bool parseSuccess = Int32.TryParse(Console.ReadLine(), out id);
-            if (parseSuccess)
-            {
-                newDev.ID = id;
-            }
-            else
-            {
-                Console.WriteLine("An error occured. Please enter a valid ID number.");
-            }
+            newDev.ID = Int32.Parse(Console.ReadLine());
+
             Console.WriteLine("Do they have a PluralSight license? (y/n)");
             string licenseString = Console.ReadLine().ToLower();
 
@@ -173,7 +164,8 @@ namespace KomodoInsurance_Console
                 Console.WriteLine("An error occured. Please try again.");
             }
         }
-        /* private void AddMultipleDeveloperstoTeam()
+        // FINAL CHALLENGE...how do we make this work?
+        private void AddMultipleDevelopersToTeam()
         {
             Console.Clear();
             Console.WriteLine("Enter the ID of the team you wish to add members to:");
@@ -182,27 +174,23 @@ namespace KomodoInsurance_Console
             Console.WriteLine("How many members would you like to add?");
             int count = Int32.Parse(Console.ReadLine());
 
-            List<Developer> _developersToAdd = new List<Developer>();
-
-            for(int x = count; x > 0; x--)
+            Developer[] _developersToAdd = new Developer[count];
+            while(count > 0)
             {
-                Developer dev = new Developer();
-                Console.WriteLine("Please enter a First Name:");
-                dev.FirstName = Console.ReadLine();
-
-                Console.WriteLine("Please enter a Last Name:");
-                dev.LastName = Console.ReadLine();
-
                 Console.WriteLine("Please enter an ID number:");
-                dev.ID = Int32.Parse(Console.ReadLine());
-
-                _developersToAdd.Add(dev);
+                int devID = Int32.Parse(Console.ReadLine());
+                Developer dev = _devRepo.GetDevByID(devID);
+                int x = count - 1;
+                _developersToAdd[x] = dev;
+                count--;
             }
            DevTeam team = _teamRepo.GetTeamByID(teamID);
-            team.AddRange(team.Count, _developersToAdd);
+           team._teamMembers.AddRange(_developersToAdd);
+           Console.WriteLine("Team Added Successfully");
         }
-        */ 
-        private void AddTeamMember()
+        
+        /* THIS METHOD IS NO LONGER USED -- updated with "AddMultipleDevelopersToTeam();
+          private void AddTeamMember()
         {
             Console.Clear();
             Console.WriteLine("Please enter the ID of the team you would like add a member to:");
@@ -222,7 +210,7 @@ namespace KomodoInsurance_Console
             {
                 Console.WriteLine("Invalid ID(s). Please try again.");
             }
-        }
+        } */
         private void CreateNewTeam()
         {
             Console.Clear();
@@ -282,6 +270,7 @@ namespace KomodoInsurance_Console
             int devID = Int32.Parse(Console.ReadLine());
 
             _teamRepo.RemoveDevFromTeam(teamID, devID);
+            Console.WriteLine("Removed developer from team.");
         }
         // View Methods:
         private void ViewListOfDevs()
