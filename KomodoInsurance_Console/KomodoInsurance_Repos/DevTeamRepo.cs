@@ -22,14 +22,12 @@ namespace KomodoInsurance_Repos
         {
             return _listOfTeams;
         }
-
         public List<Developer> ViewTeam(int id)
         {
             DevTeam team = GetTeamByID(id);
             List<Developer> teamList = team._teamMembers;
             return teamList;
         }
-
         // Update:
         public bool UpdateExistingTeam(DevTeam newTeam, int id)
         {
@@ -102,7 +100,5 @@ namespace KomodoInsurance_Repos
             }
             return null;
         }
-
-
     }
 }

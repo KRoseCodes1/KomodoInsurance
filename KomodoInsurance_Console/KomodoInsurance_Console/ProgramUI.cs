@@ -22,7 +22,6 @@ namespace KomodoInsurance_Console
         private void Menu()
         {
             bool keepRunning = true;
-
             while (keepRunning)
             {
                 Console.Clear();
@@ -120,7 +119,6 @@ namespace KomodoInsurance_Console
                     Console.ReadLine();
                     break;
             }
-
         }
         // All methods used in menus listed below
         // Add methods:
@@ -136,8 +134,16 @@ namespace KomodoInsurance_Console
             newDev.LastName = Console.ReadLine();
 
             Console.WriteLine("Enter Employee ID:");
-            newDev.ID = Int32.Parse(Console.ReadLine());
-
+            int id;
+            bool parseSuccess = Int32.TryParse(Console.ReadLine(), out id);
+            if (parseSuccess)
+            {
+                newDev.ID = id;
+            }
+            else
+            {
+                Console.WriteLine("An error occured. Please enter a valid ID number.");
+            }
             Console.WriteLine("Do they have a PluralSight license? (y/n)");
             string licenseString = Console.ReadLine().ToLower();
 
@@ -154,17 +160,48 @@ namespace KomodoInsurance_Console
                 if (newDev.ID == developer.ID)
                 {
                     Console.WriteLine("This ID is already in use. ID must be unique. Please try again.");
-                }
-                else
-                {
-                    _devRepo.AddNewDeveloper(newDev);
-                    if (newDev != null)
-                    {
-                        Console.WriteLine("Success!");
-                    }
+                    break;
                 }
             }
+            _devRepo.AddNewDeveloper(newDev);
+            if (newDev != null)
+            {
+                Console.WriteLine("Success!");
+            }
+            else
+            {
+                Console.WriteLine("An error occured. Please try again.");
+            }
         }
+        /* private void AddMultipleDeveloperstoTeam()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the ID of the team you wish to add members to:");
+            int teamID = Int32.Parse(Console.ReadLine());
+
+            Console.WriteLine("How many members would you like to add?");
+            int count = Int32.Parse(Console.ReadLine());
+
+            List<Developer> _developersToAdd = new List<Developer>();
+
+            for(int x = count; x > 0; x--)
+            {
+                Developer dev = new Developer();
+                Console.WriteLine("Please enter a First Name:");
+                dev.FirstName = Console.ReadLine();
+
+                Console.WriteLine("Please enter a Last Name:");
+                dev.LastName = Console.ReadLine();
+
+                Console.WriteLine("Please enter an ID number:");
+                dev.ID = Int32.Parse(Console.ReadLine());
+
+                _developersToAdd.Add(dev);
+            }
+           DevTeam team = _teamRepo.GetTeamByID(teamID);
+            team.AddRange(team.Count, _developersToAdd);
+        }
+        */ 
         private void AddTeamMember()
         {
             Console.Clear();
@@ -183,7 +220,7 @@ namespace KomodoInsurance_Console
             }
             else
             {
-                Console.WriteLine("Invalid IDs");
+                Console.WriteLine("Invalid ID(s). Please try again.");
             }
         }
         private void CreateNewTeam()
@@ -201,15 +238,12 @@ namespace KomodoInsurance_Console
             {
                 if (newTeam.TeamID == team.TeamID)
                 {
-                    Console.WriteLine("That team ID is already in use.  ID must be unique. Please try again.");
-                }
-                else
-                {
-                    _teamRepo.AddNewTeam(newTeam);
+                    Console.WriteLine("That team ID is already in use. ID must be unique. Please try again.");
+                    break;
                 }
             }
-
-
+            _teamRepo.AddNewTeam(newTeam);
+            Console.WriteLine("Team added successfully!");
         }
         // Remove methods:
         private void RemoveDeveloper()
@@ -249,7 +283,6 @@ namespace KomodoInsurance_Console
 
             _teamRepo.RemoveDevFromTeam(teamID, devID);
         }
-        // Update Methods:
         // View Methods:
         private void ViewListOfDevs()
         {
@@ -263,6 +296,7 @@ namespace KomodoInsurance_Console
         private void DisplayDevsWithoutLicense()
         {
             Console.Clear();
+            Console.WriteLine("The following developers do not have a PluralSight license:");
             List<Developer> listOfDevelopers = _devRepo.GetDeveloperList();
             foreach (Developer dev in listOfDevelopers)
             {
@@ -300,7 +334,6 @@ namespace KomodoInsurance_Console
                 Console.WriteLine("No members on this team.");
             }
         }
-
         // Other:
         public void SeedContent()
         {
@@ -313,6 +346,5 @@ namespace KomodoInsurance_Console
             _teamRepo._listOfTeams.Add(new DevTeam("Alpha Team", 100));
             _teamRepo._listOfTeams.Add(new DevTeam("Beta Team", 200));
         }
-
     }
 }

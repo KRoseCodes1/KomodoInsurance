@@ -16,13 +16,11 @@ namespace KomodoInsurance_Repos
         {
             _listOfDevelopers.Add(dev);
         }
-
         // Read:
         public List<Developer> GetDeveloperList()
         {
             return _listOfDevelopers;
         }
-
         // Update:
         public bool UpdateExistingDeveloper(int id, Developer newDev)
         {
@@ -39,7 +37,6 @@ namespace KomodoInsurance_Repos
                 return false;
             }
         }
-
         // Delete:
         public bool RemoveDeveloper(int id)
         {
